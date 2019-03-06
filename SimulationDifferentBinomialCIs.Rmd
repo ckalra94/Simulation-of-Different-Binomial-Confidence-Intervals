@@ -1,0 +1,47 @@
+---
+title: "SimulationDifferentBinomialCIs"
+author: "Chris Kalra"
+date: "3/6/2019"
+output: html_document
+---
+```{r}
+#Wald
+set.seed(122)
+rndm=rbinom(150, 150, 0.2)
+x=mean(rndm)
+n = 150;  alp=.05; k = qnorm(1-alp/2) 
+p=x/n;  me=k*sqrt(p*(1-p)/n) 
+lcl = p-me;  ucl = p+me 
+lcl ; ucl
+#It does indeed contain the true P value of 0.2
+
+#Agresti-Coull
+set.seed(123)
+rndm=rbinom(150, 150, 0.2)
+x=mean(rndm)
+n = 150;  alp=.05; k = qnorm(1-alp/2) 
+p=(x+2)/(n+4);  me=k*sqrt(p*(1-p)/(n+4))
+lcl = p-me;  ucl = p+me 
+lcl ; ucl
+#It does indeed contain the true P value of 0.2
+
+#Wilson (Grid Search)
+set.seed(124)
+th = seq(0, 1, by = .0001); n = 150
+rndm=rbinom(150, 150, 0.2)
+x=mean(rndm)
+p = x/n; z = (p - th)/sqrt(th*(1-th)/n) 
+wilson = range(th[abs(z) < 1.96]);  wilson
+#It does indeed contain the true P value of 0.2
+
+#Jeffrey's
+set.seed(125)
+n = 150 ; alp=0.05
+rndm=rbinom(150, 150, 0.2)
+x=mean(rndm)
+lcl = qbeta(alp/2,.5+x,.5+n-x) 
+ucl = qbeta(1-alp/2, .5+x, .5+n-x)  
+lcl ; ucl
+#It does indeed contain the true P value of 0.2
+```
+
